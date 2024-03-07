@@ -58,12 +58,19 @@ class Authcontroller extends GetxController {
     if (user == null) {
       Get.offAll(() => LoginScreen());
     } else {
-      Get.offAll(() => HomeScreen());
+      getnewuser().then((value) => Get.offAll(() => HomeScreen()));
     }
   }
 
   userlogout() {
     firebaseAuth.signOut();
     Get.offAll(() => LoginScreen());
+  }
+
+  Future getnewuser() async {
+    return (await firestore
+        .collection("Phone_number")
+        .doc('${firebaseAuth.currentUser?.phoneNumber}')
+        .get());
   }
 }

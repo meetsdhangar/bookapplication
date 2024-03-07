@@ -14,7 +14,8 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(Authcontroller());
     Timer(Duration(seconds: 3), () {
-      Get.offAll(() => LoginScreen());
+      controller.checkuserlogin();
+      //Get.offAll(() => LoginScreen());
     });
     return SafeArea(
         child: Scaffold(

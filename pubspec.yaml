@@ -43,6 +43,8 @@ dependencies:
   flutter_screenutil: ^5.9.0
   cloud_firestore: ^4.15.6
   http: ^1.2.0
+  flutter_switch: ^0.3.2
+  shared_preferences: ^2.2.2
  
 
 dev_dependencies:

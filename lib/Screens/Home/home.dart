@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:velocity_x/velocity_x.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -25,28 +26,7 @@ class HomeScreen extends StatelessWidget {
         () => homecontroller.obxcheck.value
             ? Scaffold()
             : Scaffold(
-                appBar: AppBar(
-                  backgroundColor: Colors.purple,
-                  centerTitle: true,
-                  title: Text(
-                    "Book Application",
-                    style: TextStyle(
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white),
-                  ),
-                  actions: [
-                    IconButton(
-                        onPressed: () {
-                          controller.userlogout();
-                        },
-                        icon: Icon(
-                          Icons.logout,
-                          size: 25,
-                          color: Colors.white,
-                        )),
-                  ],
-                ),
+                appBar: Appbar(controller),
                 body: homecontroller.booklist.isEmpty
                     ? Center(
                         child: CircularProgressIndicator(),
@@ -57,6 +37,7 @@ class HomeScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Searchwidget(textcontroller),
                               Padding(
                                 padding: const EdgeInsets.only(top: 20),
                                 child: TextFormField(
@@ -92,57 +73,27 @@ class HomeScreen extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                // child: TextFormField(
-                                //   controller: textcontroller,
-                                //   onChanged: (value) {
-                                //     homecontroller.SearchData(value);
-                                //   },
-                                //   cursorColor: const Color(0xff787575),
-                                //   decoration: InputDecoration(
-                                //       filled: true,
-                                //       isDense: true,
-                                //       contentPadding: const EdgeInsets.all(13),
-                                //       fillColor: const Color.fromRGBO(
-                                //           204, 204, 204, 0.19),
-                                //       hintText: "Search",
-                                //       suffixIcon: const Icon(Icons.search),
-                                //       suffixIconColor: const Color(0xff787575),
-                                //       enabledBorder: OutlineInputBorder(
-                                //         borderRadius: BorderRadius.circular(13),
-                                //         borderSide: const BorderSide(
-                                //             color: Color.fromRGBO(
-                                //                 204, 204, 204, 0.3),
-                                //             width: 1),
-                                //       ),
-                                //       focusedBorder: OutlineInputBorder(
-                                //         borderRadius: BorderRadius.circular(13),
-                                //         borderSide: const BorderSide(
-                                //             color: Color.fromRGBO(
-                                //                 204, 204, 204, 0.3),
-                                //             width: 1),
-                                //       )),
-                                // ),
                               ),
-
+                              20.h.heightBox,
                               homecontroller.searchlist.isNotEmpty
-                                  ? ListView.builder(
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
+                                  ? GridView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
+                                      padding: EdgeInsets.all(0),
                                       itemCount:
                                           homecontroller.searchlist.length,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              mainAxisSpacing: 10,
+                                              crossAxisSpacing: 15,
+                                              mainAxisExtent: 290),
                                       itemBuilder: (context, index) {
-                                        var searchdata =
-                                            homecontroller.searchlist[index];
-                                        return ListTile(
-                                          leading: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Image.network(
-                                                'https://covers.openlibrary.org/b/id/${searchdata['cover_id']}-M.jpg'),
-                                          ),
-                                          title: Text("${searchdata['title']}"),
-                                        );
-                                      })
+                                        var searchIndex = homecontroller
+                                            .searchlist.value[index];
+                                        return TopbookWidget(searchIndex);
+                                      },
+                                    )
                                   : Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -179,104 +130,13 @@ class HomeScreen extends StatelessWidget {
                                               booklist: [book[index]],
                                             ));
                                       },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        "https://covers.openlibrary.org/b/id/${book[index]['cover_id']}.jpg"),
-                                                    fit: BoxFit.cover),
-                                                color: Colors.amber,
-                                                borderRadius:
-                                                    BorderRadius.circular(15),
-                                              ),
-                                              height: 220.h,
-                                              width: 180.w,
-                                            ),
-                                            10.h.heightBox,
-                                            Text(
-                                              book[index]['title'],
-                                              style: TextStyle(
-                                                  fontSize: 17.sp,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            Text(
-                                              homecontroller
-                                                  .booklist
-                                                  .value[index]
-                                                      ['first_publish_year']
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 17.sp,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      child: TopbookWidget(book[index]),
                                     );
                                   },
                                 ),
                               ),
                               20.h.heightBox,
-                              // Row(
-                              //   mainAxisAlignment:
-                              //       MainAxisAlignment.spaceBetween,
-                              //   children: [
-                              //     Text(
-                              //       "Authors",
-                              //       style: TextStyle(
-                              //           fontSize: 20.sp,
-                              //           fontWeight: FontWeight.w600,
-                              //           letterSpacing: 0.2),
-                              //     ),
-                              //     Text(
-                              //       "See All",
-                              //       style: TextStyle(
-                              //           fontSize: 17.sp,
-                              //           fontWeight: FontWeight.w500,
-                              //           color: Colors.purple),
-                              //     )
-                              //   ],
-                              // ),
-                              // SizedBox(
-                              //   height: 10.h,
-                              // ),
-                              // Container(
-                              //   height: 200.h,
-                              //   child: ListView.builder(
-                              //     padding: EdgeInsets.all(0),
-                              //     scrollDirection: Axis.horizontal,
-                              //     itemCount: book.length,
-                              //     itemBuilder: (context, index) {
-                              //       return Padding(
-                              //         padding: const EdgeInsets.only(right: 10),
-                              //         child: Column(
-                              //           children: [
-                              //             CircleAvatar(
-                              //               radius: 70,
-                              //               backgroundImage: AssetImage(
-                              //                   'assets/images/neil.png'),
-                              //             ),
-                              //             5.h.heightBox,
-                              //             Text(
-                              //               book[index]['authorNames']
-                              //                   .toString(),
-                              //               style: TextStyle(
-                              //                   fontSize: 17.sp,
-                              //                   fontWeight: FontWeight.w600),
-                              //             )
-                              //           ],
-                              //         ),
-                              //       );
 
-                              //     },
-                              //   ),
-                              // ),
                               Text(
                                 "All Books",
                                 style: TextStyle(
@@ -300,47 +160,12 @@ class HomeScreen extends StatelessWidget {
                                         mainAxisExtent: 290),
                                 itemBuilder: (context, index) {
                                   return InkWell(
-                                    onTap: () {
-                                      Get.to(() => DetailsScreen(
-                                            booklist: [book[index]],
-                                          ));
-                                    },
-                                    child: Container(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      'https://covers.openlibrary.org/b/id/${book[index]['cover_id']}.jpg'),
-                                                  fit: BoxFit.cover),
-                                              color: Colors.amber,
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                            ),
-                                            height: 220.h,
-                                            width: 200.w,
-                                          ),
-                                          10.h.heightBox,
-                                          Text(
-                                            book[index]['title'].toString(),
-                                            style: TextStyle(
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          Text(
-                                            book[index]['first_publish_year']
-                                                .toString(),
-                                            style: TextStyle(
-                                                fontSize: 17.sp,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                                      onTap: () {
+                                        Get.to(() => DetailsScreen(
+                                              booklist: [book[index]],
+                                            ));
+                                      },
+                                      child: TopbookWidget(book[index]));
                                 },
                               ),
                             ],

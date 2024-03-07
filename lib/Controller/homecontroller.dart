@@ -7,6 +7,7 @@ class Homecontroller extends GetxController {
   RxList booklist = [].obs;
   RxBool obxcheck = false.obs;
   RxList searchlist = [].obs;
+  RxList readlist = [].obs;
   bookapi() async {
     booklist.value = [];
     var url = "https://openlibrary.org/people/mekBot/books/already-read.json";
@@ -27,15 +28,15 @@ class Homecontroller extends GetxController {
         if (i != null) {
           book.add(i['work']);
         }
-        booklist.addAll(book);
       }
+      booklist.addAll(book);
     } catch (e) {
       e.toString();
     }
   }
 
   search(searchText) {
-    // searchlist.value = [];
+    searchlist.value = [];
     if (searchlist.value.isNotEmpty) {
       searchlist.value = booklist.value
           .where((element) => element['title']
@@ -59,6 +60,14 @@ class Homecontroller extends GetxController {
               .toLowerCase()
               .startsWith(searchText.toLowerCase()))
           .toList();
+    }
+  }
+
+  Readlist(index) {
+    if (readlist.contains(index)) {
+      readlist.remove(index);
+    } else {
+      readlist.add(index);
     }
   }
 }
