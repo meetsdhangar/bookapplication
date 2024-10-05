@@ -16,13 +16,7 @@ class Homecontroller extends GetxController {
     try {
       var decodedata = jsonDecode(responce.body);
       var data = decodedata['reading_log_entries'];
-      print(data);
-// var mydata = data['work'];
-      // print(mydata);
-      // var list = data.map((m) => Work.fromMap(m)).toList();
-      // print(list);
-      // booklist.clear();
-      // booklist.addAll(list);
+;
       List book = [];
       for (var i in data) {
         if (i != null) {
@@ -32,20 +26,6 @@ class Homecontroller extends GetxController {
       booklist.addAll(book);
     } catch (e) {
       e.toString();
-    }
-  }
-
-  search(searchText) {
-    searchlist.value = [];
-    if (searchlist.value.isNotEmpty) {
-      searchlist.value = booklist.value
-          .where((element) => element['title']
-              .toString()
-              .toLowerCase()
-              .startsWith(searchText.toLowerCase()))
-          .toList();
-    } else {
-      searchlist.value = [];
     }
   }
 

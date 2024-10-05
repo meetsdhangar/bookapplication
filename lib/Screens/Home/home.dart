@@ -2,13 +2,13 @@ import 'package:bookapplication/Controller/authcontroller.dart';
 import 'package:bookapplication/Controller/homecontroller.dart';
 import 'package:bookapplication/Screens/Home/homewidget.dart';
 import 'package:bookapplication/Screens/details.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'package:velocity_x/velocity_x.dart';
-import 'package:flutter_switch/flutter_switch.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -21,6 +21,7 @@ class HomeScreen extends StatelessWidget {
 
     TextEditingController textcontroller = TextEditingController();
     final book = homecontroller.booklist.value;
+
     return SafeArea(
       child: Obx(
         () => homecontroller.obxcheck.value
@@ -147,25 +148,51 @@ class HomeScreen extends StatelessWidget {
                               SizedBox(
                                 height: 10.h,
                               ),
-                              GridView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                              ListView.builder(
                                 shrinkWrap: true,
-                                padding: EdgeInsets.all(0),
+                                physics: NeverScrollableScrollPhysics(),
                                 itemCount: book.length,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        mainAxisSpacing: 10,
-                                        crossAxisSpacing: 15,
-                                        mainAxisExtent: 290),
                                 itemBuilder: (context, index) {
+                                  //  print(
+                                  // "booklist:${book[index]['author_names']}");
+                                  var authorlist =
+                                      book[index]['author_names'].toString();
+
+                                  var newauthor = authorlist.substring(
+                                      1, authorlist.length - 1);
                                   return InkWell(
-                                      onTap: () {
-                                        Get.to(() => DetailsScreen(
-                                              booklist: [book[index]],
-                                            ));
-                                      },
-                                      child: TopbookWidget(book[index]));
+                                    onTap: () {
+                                      Get.to(() =>
+                                          DetailsScreen(booklist: book[index]));
+                                    },
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.all(10),
+                                      leading: Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                  "https://covers.openlibrary.org/b/id/${book[index]['cover_id']}.jpg"),
+                                              fit: BoxFit.cover),
+                                          color: Colors.amber,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        height: 100.h,
+                                        width: 80.w,
+                                      ),
+                                      title:
+                                          Text(book[index]['title'].toString()),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Auther: ${newauthor}"),
+                                          Text(
+                                              "Publish year: ${book[index]['first_publish_year']}"),
+                                        ],
+                                      ),
+                                    ),
+                                  );
                                 },
                               ),
                             ],

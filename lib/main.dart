@@ -1,4 +1,3 @@
-import 'package:bookapplication/Screens/Home/home.dart';
 import 'package:bookapplication/Screens/Splash/splash.dart';
 
 import 'package:bookapplication/firebase_options.dart';
